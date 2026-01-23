@@ -9,7 +9,6 @@ Any suggestions are welcomed.
  
 
 ## Installation 
----
 
 ```
 git clone https://github.com/gagho/simplefold-burn
@@ -31,7 +30,7 @@ cargo run --release
 ```
 
 ## A todo list 
----
+
 - [ ] Clean up:
 	- [ ] Test ESM install
 	- [ ] Save configs + load any version 
@@ -48,7 +47,7 @@ cargo run --release
 	- [ ] Add training 
 	
 ## Citation 
----
+
 The simplefold model is described in the following paper:
 ```
 @article{simplefold,
@@ -59,7 +58,7 @@ The simplefold model is described in the following paper:
 }
 ```
 ## License
----
+
 
 This implementation is licensed under the MIT License, see [LICENSE](LICENSE) for details.
 
