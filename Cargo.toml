@@ -1,0 +1,14 @@
+[package]
+name = "simplefold-burn"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+burn = { version = "0.20.0", features = ["wgpu"] }
+burn-import = "0.20.0"
+kdam = "0.6.4"
+polars = { version = "0.52.0", features = ["lazy", "json", "timezones"] }
+pyo3 = "0.27.2"
+reqwest = { version = "0.13.1", features = ["blocking"] }
+serde = "1.0.228"
+serde_json = "1.0.145"
