@@ -3,7 +3,7 @@
 This repo contains an implementation of the simplefold model in Rust with the [burn](https://burn.dev/) library. 
 The original code is provided by apple [here](https://github.com/apple/ml-simplefold/tree/main). 
 
-[!NOTE]
+>[!NOTE]
 >This is a personal project used to simultaneously learn more about Rust and get up to date in the AI for drug discovery game. It is still very rough around the edges, but they will get smoother in the coming months. 
 Any suggestions are welcomed.
  
