@@ -193,14 +193,14 @@ pub struct Features<B: Backend> {
 }
 
 pub fn process_data<B: Backend>(
-    cache: String,
-    aa: String,
+    cache: &str,
+    aa: &str,
     atoms_per_wq: i32,
     device: B::Device,
 ) -> FeaturesBatch<B> {
     let num_elements = 128;
 
-    let feats = get_seq_info(cache.clone(), aa.clone()).unwrap();
+    let feats = get_seq_info(cache.to_string(), aa.to_string()).unwrap();
     let f = get_vecs_from_feats(feats);
 
     let seq_len = aa.len();
@@ -237,7 +237,7 @@ pub fn process_data<B: Backend>(
     let atom_mask = Tensor::<B, 1>::ones([n_atoms], &device);
     let atom_pad_mask = Tensor::cat(vec![atom_mask.clone(), zero_pads.clone()], 0);
 
-    let (res_type, ref_space_uid) = get_token_maps::<B>(aa.clone(), &device);
+    let (res_type, ref_space_uid) = get_token_maps::<B>(aa.to_string(), &device);
     let atom_to_token: Tensor<B, 2> = ref_space_uid.clone().one_hot(seq_len);
     let atom_to_token_idx = Tensor::cat(vec![ref_space_uid.clone(), zero_pads.clone()], 0);
     let atom_to_token = atom_to_token.clone().pad((0, 0, 0, pad_len), 0.0);
@@ -251,7 +251,7 @@ pub fn process_data<B: Backend>(
     let max_num_tokens = Tensor::<B, 1, burn::tensor::Int>::from_ints([n_len], &device);
     let cropped_num_tokens = Tensor::<B, 1, burn::tensor::Int>::from_ints([n_len], &device);
     let num_repeats = Tensor::<B, 1, burn::tensor::Int>::from_ints([1], &device);
-    let esm_encoding = compute_esm_representation::<B>(aa.clone(), &device);
+    let esm_encoding = compute_esm_representation::<B>(aa.to_string(), &device);
 
     FeaturesBatch {
         num_repeats: num_repeats.unsqueeze(),
@@ -411,7 +411,9 @@ pub fn get_model_record<B: Backend>(
                 println!("Finished download successfully");
             }
             Err(e) => {
-                eprintln!("Failed to download {weight_url} because {e}");
+                eprintln!(
+                    "Failed to download {weight_url} because {e}. You can retry or manually download and with 'curl -L {weight_url} -o {ckpt_path}"
+                );
             }
         };
     }
@@ -419,3 +421,5 @@ pub fn get_model_record<B: Backend>(
     let record = load_weights(ckpt_path, device);
     return record;
 }
+
+pub fn get_config_file(model_name: &str) {}

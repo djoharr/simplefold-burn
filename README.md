@@ -25,15 +25,17 @@ deactivate
 ```
 
 To use the code for now you would need to tweek the main.rs file to your liking and run: 
+To use the code you can pick a model (among 100M, 360M, 700M, 1.1B, 1.6B, 3B) and copy an AA sequence:
 ```
-cargo run --release
+cargo run --release simplefold_100M MGPSLDFALSLLRRNIRQV
 ```
+You can modify the flow parameters in the main.rs directly.
 
 ## A todo list 
 
 - [ ] Clean up:
-	- [ ] Test ESM install
-	- [ ] Save configs + load any version 
+	- [X] Test ESM install
+	- [X] Save configs + load any version 
 	- [ ] Test all backends 
 	- [ ] Copy burn [examples](https://github.com/tracel-ai/burn/tree/main/examples) structure
 	- [ ] Clean up python section 

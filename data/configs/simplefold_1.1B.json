@@ -1,0 +1,11 @@
+{
+  "h_size": 1280,
+  "n_heads": 20,
+  "depth": 36,
+  "atom_h_size": 384,
+  "atom_n_heads": 6,
+  "atom_depth": 2,
+  "in_dim": 4,
+  "time_freq_size": 256,
+  "esm_in_dim": 2560
+}

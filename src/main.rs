@@ -13,48 +13,27 @@ mod ref_constants;
 mod utils;
 
 fn main() {
-    let seq = "AG";
-    let feats = data::get_seq_info("data/ccd.json".to_string(), seq.to_string()).unwrap();
-    let f = data::get_vecs_from_feats(feats);
-    println!("{:?}", f.atoms);
+    let args: Vec<String> = std::env::args().collect();
+    let model_name = &args[1];
+    let seq = &args[2];
 
     type B = Wgpu<f32, i32>;
     let device = burn::backend::wgpu::WgpuDevice::default();
     B::seed(&device, 42);
 
-    let features = process_data::<B>(
-        "data/ccd.json".to_string(),
-        seq.to_string(),
-        32,
-        device.clone(),
-    );
-
-    // 100M Configs:
-    let h_size = 768;
-    let n_heads = 12;
-    let depth = 8;
-    let atom_h_size = 256;
-    let atom_n_heads = 4;
-    let atom_depth = 1;
+    let ccd_path = "data/ccd.json";
+    let features = process_data::<B>(ccd_path, seq, 32, device.clone());
 
     // Flow config
-    let num_timesteps = 1000;
+    let num_timesteps = 100;
     let tau = 0.05;
     let t_start = 1e-4;
     let w_cutoff = 0.99;
 
-    let record = get_model_record(&"simplefold_100M", &"data", &device);
-
-    let model = FoldingDiTConfig::new(
-        h_size,
-        n_heads,
-        depth,
-        atom_h_size,
-        atom_n_heads,
-        atom_depth,
-    )
-    .init::<B>(&device)
-    .load_record(record);
+    let config_path = format!("data/configs/{}.json", model_name);
+    let loaded_config = FoldingDiTConfig::load(config_path).unwrap();
+    let record = get_model_record(model_name, &"data", &device);
+    let model = loaded_config.init::<B>(&device).load_record(record);
 
     let flow = Flow {
         num_timesteps,
@@ -63,10 +42,10 @@ fn main() {
         w_cutoff,
     };
 
+    println!("Starting forward pass");
     let distribution = Distribution::Normal(0.0, 1.0);
     let noised_pos = Tensor::<B, 3>::random(features.coords.shape(), distribution, &device);
-
-    println!("Starting forward pass");
     let res = flow.sample(model, noised_pos, features, &device);
+    println!("Results: {res}");
     println!("Done !");
 }
